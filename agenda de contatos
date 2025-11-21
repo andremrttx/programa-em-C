@@ -1,0 +1,106 @@
+#include <stdio.h>
+#include <string.h>
+
+#define MAX 10
+
+struct Contato {
+    char nome[50];
+    char telefone[20];
+    char email[50];
+};
+
+void adicionarContato(struct Contato contatos[], int *total);
+void listarContatos(struct Contato contatos[], int total);
+void buscarContato(struct Contato contatos[], int total);
+void removerContato(struct Contato contatos[], int *total);
+
+int main() {
+    struct Contato contatos[MAX];
+    int total = 0;
+    int opcao;
+
+    do {
+        printf("\n=== MENU AGENDA ===\n");
+        printf("1 - Adicionar contato\n");
+        printf("2 - Listar contatos\n");
+        printf("3 - Buscar contato\n");
+        printf("4 - Remover contato\n");
+        printf("0 - Sair\n");
+        printf("Escolha: ");
+        scanf("%d", &opcao);
+        getchar();
+
+        switch (opcao) {
+            case 1:
+                adicionarContato(contatos, &total);
+                break;
+            case 2:
+                listarContatos(contatos, total);
+                break;
+            case 3:
+                buscarContato(contatos, total);
+                break;
+            case 4:
+                removerContato(contatos, &total);
+                break;
+        }
+    } while (opcao != 0);
+
+    return 0;
+}
+
+void adicionarContato(struct Contato contatos[], int *total) {
+    if (*total < MAX) {
+        printf("Nome: ");
+        scanf(" %[^\n]", contatos[*total].nome);
+        printf("Telefone: ");
+        scanf(" %[^\n]", contatos[*total].telefone);
+        printf("E-mail: ");
+        scanf(" %[^\n]", contatos[*total].email);
+        (*total)++;
+        printf("Contato adicionado!\n");
+    } else {
+        printf("Limite de contatos atingido!\n");
+    }
+}
+
+void listarContatos(struct Contato contatos[], int total) {
+    printf("\n=== LISTA DE CONTATOS ===\n");
+    for (int i = 0; i < total; i++) {
+        printf("%d. %s - %s - %s\n", i + 1,
+               contatos[i].nome, contatos[i].telefone, contatos[i].email);
+    }
+}
+
+void buscarContato(struct Contato contatos[], int total) {
+    char busca[50];
+    printf("Digite o nome: ");
+    scanf(" %[^\n]", busca);
+
+    for (int i = 0; i < total; i++) {
+        if (strcmp(busca, contatos[i].nome) == 0) {
+            printf("Encontrado: %s - %s - %s\n",
+                   contatos[i].nome, contatos[i].telefone, contatos[i].email);
+            return;
+        }
+    }
+    printf("Contato não encontrado.\n");
+}
+
+void removerContato(struct Contato contatos[], int *total) {
+    char busca[50];
+    printf("Digite o nome do contato para remover: ");
+    scanf(" %[^\n]", busca);
+
+    for (int i = 0; i < *total; i++) {
+        if (strcmp(busca, contatos[i].nome) == 0) {
+            for (int j = i; j < *total - 1; j++) {
+                contatos[j] = contatos[j + 1];
+            }
+            (*total)--;
+            printf("Contato removido!\n");
+            return;
+        }
+    }
+    printf("Contato não encontrado.\n");
+}
